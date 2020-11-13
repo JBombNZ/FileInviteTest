@@ -1,11 +1,8 @@
-@extends('layouts.login')
+@extends('layouts.app')
 
 @section('content')
     
-    <app-component
-    	:auth="'{{ $authHeader }}'"
-    	:ip="'{{ $ip }}'"
-    >
-    </app-component>
+    <main-layout>
+    </main-layout>    
     
 @endsection
