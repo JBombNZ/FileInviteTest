@@ -33,7 +33,19 @@
 
     data: () => ({
 	    drawer: false,
-	  }),
+    }),
+    
+    mounted () {
+
+      window.axios.get('/api/user')
+        .then((response) => {
+          return
+        })
+        .catch((error) => {
+          return
+        });
+			
+    }
 
   }
 </script>

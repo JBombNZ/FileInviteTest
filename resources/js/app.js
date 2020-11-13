@@ -8,8 +8,6 @@ Vue.use(Vuetify)
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
-
-
 import Main from './components/Main.vue';
 Vue.component('main-layout', Main);
 
@@ -32,6 +30,33 @@ const routes = [
 const router = new VueRouter({
   routes // short for `routes: routes`
 })
+
+import axios from 'axios'
+
+window.axios = axios.create({
+    //baseURL: '', //We dont need to set this in this dev environment
+    timeout: 10000,
+    params: {} // do not remove this, its added to add params later in the config
+});
+
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+window.axios.interceptors.response.use((response) => {
+
+  console.log(response)
+
+  return response;
+}, (error) => {
+  
+  // Take them to the login page if they are ever not logged in
+  if (error.response.status == 401) {
+    router.push({ path: '/login' })
+  }
+
+  return Promise.reject(error);
+});
+
+
 
 const app = new Vue({
   el: '#app',
