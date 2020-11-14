@@ -91,16 +91,26 @@
       },
       
       login () {
+
         window.axios.post('/login', this.model)
         .then((response) => {
+
+          this.$store.state.user.name = response.data.data.name
+          this.$store.state.user.role = response.data.data.role
+
+          this.$router.push({ path: '/home' })
 
           console.log(response)
           
         })
         .catch((error) => {
-          if (error.response.status == 422) {
-            this.errors = error.response.data.message
+
+          if (error.response) {
+            if (error.response.status == 422) {
+              this.errors = error.response.data.message
+            }
           }
+
         });
       }
 
