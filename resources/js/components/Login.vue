@@ -18,12 +18,14 @@
               <v-col cols="12">
                 <v-text-field
                   label="Email"
+                  v-model="model.email"
                   required
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-text-field
                   label="Password"
+                  v-model="model.password"
                   type="password"
                   required
                 ></v-text-field>
@@ -33,12 +35,18 @@
           
         </v-card-text>
 
+        <v-card-text v-if="errors">
+          <v-container>
+            {{ errors }}
+          </v-container>
+        </v-card-text>
+
         <v-card-actions>
 
           <v-btn
             color="blue darken-1"
             text
-            href="/register"
+            @click="register()"
           >
             Register
           </v-btn>
@@ -48,7 +56,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="dialog = false"
+            @click="login()"
           >
             Login
           </v-btn>
@@ -64,20 +72,38 @@
 <script>
   export default {
     data: () => ({
-	    dialog: true
+      dialog: true,
+      model: {
+        email: '',
+        password: ''
+      },
+      errors: ''
     }),
   
     mounted () {
 
-      //If this was a pure SPA then we would need to fetch CSRF cookie from Sanctum
-      window.axios.get('/sanctum/csrf-cookie')
+    },
+
+    methods: {
+
+      register () {
+        this.$router.push({ path: '/register' })
+      },
+      
+      login () {
+        window.axios.post('/login', this.model)
         .then((response) => {
 
+          console.log(response)
+          
         })
         .catch((error) => {
-          
+          if (error.response.status == 422) {
+            this.errors = error.response.data.message
+          }
         });
-        
+      }
+
     }
 
 

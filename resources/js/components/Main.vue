@@ -36,13 +36,20 @@
     }),
     
     mounted () {
-
-      window.axios.get('/api/user')
+      
+      //If this was a pure SPA then we would need to fetch CSRF cookie from Sanctum
+      window.axios.get('/sanctum/csrf-cookie')
         .then((response) => {
-          return
+          window.axios.get('/api/user')
+            .then((response) => {
+              return
+            })
+            .catch((error) => {
+              return
+            });
         })
         .catch((error) => {
-          return
+          
         });
 			
     }

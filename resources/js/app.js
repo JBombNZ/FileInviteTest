@@ -5,8 +5,6 @@ window.Vue = require('vue');
 import Vuetify from 'vuetify'
 Vue.use(Vuetify)
 
-import VueRouter from 'vue-router'
-Vue.use(VueRouter)
 
 import Main from './components/Main.vue';
 Vue.component('main-layout', Main);
@@ -20,12 +18,15 @@ Vue.component('register', Register);
 import Home from './components/Home.vue';
 Vue.component('home', Home);
 
+
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
+
 const routes = [
   { path: '/', component: Home },
 	{ path: '/login', component: Login },
   { path: '/register', component: Register }
 ]
-
 
 const router = new VueRouter({
   routes // short for `routes: routes`
