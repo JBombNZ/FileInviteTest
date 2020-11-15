@@ -13,7 +13,7 @@ class Booking extends Model
      *
      */
     protected $fillable = [
-        'role_id',
+        'room_id',
         'user_id',
         'start',
         'end'

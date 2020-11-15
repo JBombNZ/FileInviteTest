@@ -88,12 +88,12 @@
 						<v-radio
 							key="0.5"
 							label="30 Minutes"
-							value="0.5"
+							value="30"
 						></v-radio>
 						<v-radio
 							key="1"
 							label="1 Hour"
-							value="1"
+							value="60"
 						></v-radio>
 					</v-radio-group>
 					

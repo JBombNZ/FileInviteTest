@@ -33,7 +33,7 @@ const routes = [
 	{ path: '/login', component: Login },
   { path: '/register', component: Register },
   { path: '/rooms', component: Rooms },
-  { path: '/book-room', component: BookRoom },
+
 ]
 
 const router = new VueRouter({

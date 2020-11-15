@@ -15,7 +15,12 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             'App\Repositories\Interfaces\RoomRepositoryInterface',
-            'App\Repositories\RoomRepository'
+            'App\Repositories\RoomRepository',
+        );
+        
+        $this->app->bind(
+            'App\Repositories\Interfaces\BookingRepositoryInterface',
+            'App\Repositories\BookingRepository',
         );
     }
 
