@@ -6,30 +6,31 @@
 
         <v-list-item link @click="navigate('/home')">
           <v-list-item-action>
-            <v-icon>mdi-vhs</v-icon>
+            <v-icon>mdi-monitor-dashboard</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Dashboard</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item link @click="$refs.bookRoom.dialog = true">
-          <v-list-item-action>
-            <v-icon>mdi-vhs</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Book A Room</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
         <v-list-item link @click="navigate('/bookings')">
           <v-list-item-action>
-            <v-icon>mdi-vhs</v-icon>
+            <v-icon>mdi-calendar-month</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Bookings</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <v-list-item link @click="logout()">
+          <v-list-item-action>
+            <v-icon>mdi-logout</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
 
       </v-list>
     </v-navigation-drawer>
@@ -51,11 +52,6 @@
       <!-- -->
     </v-footer>
 
-    <!-- Sizes your content based upon application components -->
-    <book-room
-      ref="bookRoom"
-    ></book-room>
-
   </v-app>
 
 </template>
@@ -65,9 +61,6 @@
 
     data: () => ({
       drawer: false,
-      dialogs: {
-        bookRoom: false
-      }
     }),
     
     mounted () {
@@ -101,8 +94,20 @@
         this.$router.push({ path: page })
       },
 
-      openBookRoomDialog() {
-        this.$refs.bookRoom.dialog = true
+      logout () {
+        window.axios.get('/api/logout')
+          .then((response) => {
+
+            this.$store.state.user.name = ''
+            this.$store.state.user.role = ''
+
+            this.$router.push({ path: '/login' })
+
+            return
+          })
+          .catch((error) => {
+
+          });
       }
 
     }

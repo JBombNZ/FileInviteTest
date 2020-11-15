@@ -17,20 +17,15 @@ use App\Http\Controllers\Api\UserController;
 |
 */
 
-/*Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});*/
-
-
-        
-//Route::get('rooms', [RoomController::class, 'index']);
-
 Route::middleware('auth:sanctum')->group(function () {
     
     Route::get('rooms', [RoomController::class, 'index']);
+    
     Route::get('user', [UserController::class, 'index']);
+    Route::get('logout', [UserController::class, 'logout']);
     
     Route::get('bookings', [BookingController::class, 'index']);
     Route::post('bookings', [BookingController::class, 'store']);
+    Route::delete('bookings/{id}', [BookingController::class, 'destroy']);
     
 });

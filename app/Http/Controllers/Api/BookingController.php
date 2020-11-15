@@ -70,5 +70,23 @@ class BookingController extends Controller
             'message' => 'Booking created successfully'
         ]);
     }
+ 
+    /*
+     * 
+     */
+    public function destroy($id)
+    {
+        $user = Auth::user();
+        if ($model = $user->bookings()->where('id', $id)->first()) {
+            $model->delete();
+            
+            return response()->json([
+               'success' => true 
+            ]);
+        } else {
+            abort(403);
+        }
+        
+    }
     
 }

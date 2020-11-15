@@ -7,7 +7,7 @@
       max-width="600px"
     >
 
-      <v-card v-if="allowed">
+      <v-card>
         <v-card-title>
           <span class="headline">Book a Room</span>
         </v-card-title>
@@ -86,12 +86,12 @@
 
 					<v-radio-group v-model="model.duration">
 						<v-radio
-							key="0.5"
+							key="30"
 							label="30 Minutes"
 							value="30"
 						></v-radio>
 						<v-radio
-							key="1"
+							key="60"
 							label="1 Hour"
 							value="60"
 						></v-radio>
@@ -117,7 +117,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="dialog = false"
+            @click="clearModel()"
           >
             Cancel
           </v-btn>
@@ -133,31 +133,7 @@
         </v-card-actions>
 
       </v-card>
-
-	  <v-card v-else>
-
-        <v-card-title>
-          <span class="headline">Denied</span>
-        </v-card-title>
-
-        <v-card-text>
-			Guests cannot book rooms
-        </v-card-text>
-
-		<v-card-actions>
-			<v-spacer></v-spacer>
-			<v-btn
-            color="blue darken-1"
-            text
-            @click="dialog = false"
-          >
-            Ok
-          </v-btn>
-
-		</v-card-actions>
-
-	  </v-card>
-
+	  
     </v-dialog>
   </v-row>
 
@@ -166,13 +142,18 @@
 <script>
   export default {
 
+	props: [
+		'rooms',
+	],
+
     data: () => ({
 	  date: new Date().toISOString().substr(0, 10),
 	  minDate: new Date().toISOString().substr(0, 10),
       menu: false,
-	  rooms: [],
+	  edit: false,
 	  dialog: false,
       model: {
+		id: null,
 		room: null,
 		date: null,
 		time: null,
@@ -185,58 +166,72 @@
     },
 
 	watch: {
-		// Refresh the room when we 
-		dialog: function (val) {
-			if (val == true) {
-				window.axios.get('/api/rooms')
-					.then((response) => {
 
-						this.rooms = response.data.data
-					
-					})
-					.catch((error) => {
-
-					});
-			}
-		},
 	},
 	  
 	computed: {
-		allowed: function () {
-			if (this.$store.state.user.role == 'User') {
-				return true
-			}
-			return false
-		}
+
 	},
 
     methods: {
 
       submit () {
 
-		window.axios.post('/api/bookings', this.model)
-			.then((response) => {
+		var method = 'post'
+		if (this.edit) {
+			method = 'patch'
 
-				console.log(response)
-				if (response.data.success) {
-					this.$router.push({ path: '/bookings' })
-				}
-				else {
-					this.errors = response.data.message
-				}
-			
-			})
-			.catch((error) => {
+		}
+			/*window.axios.post('/api/bookings', this.model)
+				.then((response) => {
+	
+					if (response.data.success) {
+						this.dialog = false
+						this.clearModel()
+						this.$emit('booking-created')
+					}
+					else {
+						this.errors = response.data.message
+					}
+				
+				})
+				.catch((error) => {
+					if (error.response.status == 422) {
+						this.errors = error.response.data.message
+					}
+				});*/
+		
 
-				if (error.response.status == 422) {
-					// The information for each fields error is in here but will skip for a test
-					this.errors = error.response.data.message
-				}
+		window.axios({
+			method: method,
+			url: '/api/bookings',
+		})
+		.then((response) => {
+			if (response.data.success) {
+				this.$emit('booking-created')
+				this.clearModel()
+			}
+			else {
+				this.errors = response.data.message
+			}
+		})
+		.catch((error) => {
+			if (error.response.status == 422) {
+				this.errors = error.response.data.message
+			}
+		});
 
-			});
-
-
-      }
+	  },
+	  
+	  clearModel () {
+		this.model.id = null
+		this.model.room = null
+		this.model.date = null
+		this.model.time = null
+		this.model.duration = null
+		this.edit = false
+		this.dialog = false
+	  }
 
     }
 

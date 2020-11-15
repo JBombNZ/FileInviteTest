@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Repositories\Interfaces\BookingRepositoryInterface;
 use App\Models\Booking;
+use Illuminate\Support\Facades\Auth;
 
 
 class BookingRepository implements BookingRepositoryInterface
@@ -27,14 +28,15 @@ class BookingRepository implements BookingRepositoryInterface
             ->with('room')
             ->with('user');
         
-        // Filter start time
-        if (!empty($parameters['start'])) {
-            $query = $query->where('start', '>=', $parameters['start']);
-        }
-        
-        // Filter end time
-        if (!empty($parameters['end'])) {
-            $query = $query->where('end', '<=', $parameters['end']);
+        // Filter times
+        if (!empty($parameters['start']) && !empty($parameters['end'])) {
+            $query = $query->whereRaw('((? > start AND ? < end) or (? > start AND ? < end))', [
+                $parameters['start']->format('Y-m-d H:i:s'), 
+                $parameters['start']->format('Y-m-d H:i:s'),
+                $parameters['end']->format('Y-m-d H:i:s'),
+                $parameters['end']->format('Y-m-d H:i:s')
+            ]);
+            
         }
         
         // Filter room
@@ -42,6 +44,16 @@ class BookingRepository implements BookingRepositoryInterface
             $query = $query->where('room_id', $parameters['room']);
         }
         
+        // Filter date
+        if (!empty($parameters['date'])) {
+            $query = $query->whereDate('start', $parameters['date']);
+        }
+        
+        // Filter by logged in users bookings
+        if (!empty($parameters['userBookings']) && $parameters['userBookings'] == 'true') {
+            $query = $query->where('user_id', Auth::user()->id);
+        }
+                
         // Apply a sorting
         if (!empty($parameters['sortBy']) && !empty($parameters['sortDesc'])) {
             
@@ -52,7 +64,7 @@ class BookingRepository implements BookingRepositoryInterface
                 case 'room':
                     $query = $query->join('rooms', 'bookings.room_id', '=', 'rooms.id')
                                     ->select('bookings.*', 'rooms.title as room_title')
-                                   ->orderBy('room_title', ($parameters['sortDesc']) ? 'desc' : 'asc');
+                                    ->orderBy('room_title', ($parameters['sortDesc']) ? 'desc' : 'asc');
                     break;
                 case 'user':
                     $query = $query->join('users', 'bookings.user_id', '=', 'users.id')
@@ -66,7 +78,9 @@ class BookingRepository implements BookingRepositoryInterface
                 default:
                     
             }
-            
+        } else { 
+            // Apply a default sort based on date
+            $query = $query->orderBy('start', 'asc');
         }
                
         if ($paginate) {

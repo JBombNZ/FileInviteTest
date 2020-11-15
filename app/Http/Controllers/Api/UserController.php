@@ -17,4 +17,16 @@ class UserController extends Controller
         return new UserResource(Auth::user());
     }
     
+    /*
+     * 
+     */
+    public function logout()
+    {
+        Auth::guard('web')->logout();
+        
+        return response()->json([
+            'success' => true
+        ]);
+    }
+    
 }
