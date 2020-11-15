@@ -23,7 +23,9 @@ class BookingRepository implements BookingRepositoryInterface
      */
     public function search($parameters, $paginate = 10)
     {
-        $query = $this->model;
+        $query = $this->model
+            ->with('room')
+            ->with('user');
         
         // Filter start time
         if (!empty($parameters['start'])) {
@@ -41,7 +43,29 @@ class BookingRepository implements BookingRepositoryInterface
         }
         
         // Apply a sorting
-        if (!empty($parameters['sort'])) {
+        if (!empty($parameters['sortBy']) && !empty($parameters['sortDesc'])) {
+            
+            switch ($parameters['sortBy']) {
+                case 'date':
+                    $query = $query->orderBy('start', ($parameters['sortDesc']) ? 'desc' : 'asc');
+                    break;
+                case 'room':
+                    $query = $query->join('rooms', 'bookings.room_id', '=', 'rooms.id')
+                                    ->select('bookings.*', 'rooms.title as room_title')
+                                   ->orderBy('room_title', ($parameters['sortDesc']) ? 'desc' : 'asc');
+                    break;
+                case 'user':
+                    $query = $query->join('users', 'bookings.user_id', '=', 'users.id')
+                                   ->select('bookings.*', 'users.name as user_name')
+                                   ->orderBy('user_name', ($parameters['sortDesc']) ? 'desc' : 'asc');
+                    break;
+                case 'time':
+                    $query = $query->selectRaw('bookings.*, DATE_FORMAT(start, \'%H%i\') as start_time')
+                                   ->orderBy('start_time', ($parameters['sortDesc']) ? 'desc' : 'asc');
+                    break;
+                default:
+                    
+            }
             
         }
                

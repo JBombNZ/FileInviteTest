@@ -17,8 +17,8 @@ class BookingResource extends JsonResource
         return [
             'room' => $this->room->title,
             'user' => $this->user->name,
-            'start' => $this->start->format(config('app.timeformat')),
-            'end' => $this->end->format(config('app.timeformat'))
+            'date' => $this->start->format(config('app.dateformat')),
+            'time' => $this->start->format(config('app.timeformat')) . ' - ' . $this->end->format(config('app.timeformat'))
         ];
     }
 }

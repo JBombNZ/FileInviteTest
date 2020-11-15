@@ -68,7 +68,8 @@ return [
     */
 
     'timezone' => 'Pacific/Auckland',
-    'timeformat' => 'g:ia j M y',
+    'timeformat' => 'g:ia',
+    'dateformat' => 'j M y',
 
     /*
     |--------------------------------------------------------------------------
