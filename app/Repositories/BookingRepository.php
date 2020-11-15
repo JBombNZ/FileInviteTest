@@ -30,11 +30,13 @@ class BookingRepository implements BookingRepositoryInterface
         
         // Filter times
         if (!empty($parameters['start']) && !empty($parameters['end'])) {
-            $query = $query->whereRaw('((? > start AND ? < end) or (? > start AND ? < end))', [
+            $query = $query->whereRaw('((? > start AND ? < end) OR (? > start AND ? < end) OR (start > ? AND end < ?))', [
                 $parameters['start']->format('Y-m-d H:i:s'), 
                 $parameters['start']->format('Y-m-d H:i:s'),
                 $parameters['end']->format('Y-m-d H:i:s'),
-                $parameters['end']->format('Y-m-d H:i:s')
+                $parameters['end']->format('Y-m-d H:i:s'),
+                $parameters['start']->format('Y-m-d H:i:s'),
+                $parameters['end']->format('Y-m-d H:i:s'),
             ]);
             
         }
