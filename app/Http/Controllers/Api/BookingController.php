@@ -42,28 +42,16 @@ class BookingController extends Controller
     {
         $user = Auth::user();
                 
-        $start = Carbon::parse($request->get('date') . ' ' . $request->get('time'));
-        $end = $start->copy()->addMinutes($request->get('duration'));
+        $data = $this->parseCheckBooking($request, $user);
         
-        $parameters = [
-            'start' => $start,
-            'end' => $end,
-            'room' => $request->get('room')
-        ];
-        $existingBooking = $this->repository->search($parameters, 0);
-        
-        if ($existingBooking->count() > 0) {
+        if ($data == false) {
             return response()->json([
                 'success' => false,
                 'message' => 'There is already a booking for that time and room'
             ]);
         }
         
-        $booking = $user->bookings()->create([
-            'room_id' => $request->get('room'),
-            'start' => $start,
-            'end' => $end
-        ]);
+        $booking = $user->bookings()->create($data);
         
         return response()->json([
             'success' => true,
@@ -71,6 +59,33 @@ class BookingController extends Controller
         ]);
     }
  
+    /*
+     * 
+     */
+    public function update(BookingRequest $request)
+    {
+        $user = Auth::user();
+        
+        if (!$model = $user->bookings()->where('id', $request->get('id'))->first()) {
+            abort(404);
+        }
+        
+        $data = $this->parseCheckBooking($request, $user);
+        
+        if ($data == false) {
+            return response()->json([
+                'success' => false,
+                'message' => 'There is already a booking for that time and room'
+            ]);
+        }
+        
+        $model->update($data);
+        
+        return response()->json([
+            'success' => true
+        ]);
+    }
+    
     /*
      * 
      */
@@ -89,4 +104,26 @@ class BookingController extends Controller
         
     }
     
+    /*
+     * 
+     */
+    protected function parseCheckBooking($request, $user)
+    {
+        $start = Carbon::parse($request->get('date') . ' ' . $request->get('time'));
+        $end = $start->copy()->addMinutes($request->get('duration'));
+        
+        $parameters = [
+            'start' => $start,
+            'end' => $end,
+            'room_id' => $request->get('room_id')
+        ];
+        $existingBooking = $this->repository->search($parameters, 0);
+        
+        if ($existingBooking->count() > 0) {
+            return false;
+        }
+        
+        return $parameters;
+    }
+
 }

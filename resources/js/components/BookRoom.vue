@@ -21,7 +21,7 @@
 						label="Select Room"
 						item-text="title"
 						item-value="id"
-						v-model="model.room"
+						v-model="model.room_id"
 						required
                 	></v-select>
 				</v-col>
@@ -154,7 +154,7 @@
 	  dialog: false,
       model: {
 		id: null,
-		room: null,
+		room_id: null,
 		date: null,
 		time: null,
 		duration: null
@@ -179,32 +179,13 @@
 
 		var method = 'post'
 		if (this.edit) {
-			method = 'patch'
-
+			method = 'put'
 		}
-			/*window.axios.post('/api/bookings', this.model)
-				.then((response) => {
-	
-					if (response.data.success) {
-						this.dialog = false
-						this.clearModel()
-						this.$emit('booking-created')
-					}
-					else {
-						this.errors = response.data.message
-					}
-				
-				})
-				.catch((error) => {
-					if (error.response.status == 422) {
-						this.errors = error.response.data.message
-					}
-				});*/
-		
 
 		window.axios({
 			method: method,
 			url: '/api/bookings',
+			data: this.model
 		})
 		.then((response) => {
 			if (response.data.success) {
@@ -225,10 +206,11 @@
 	  
 	  clearModel () {
 		this.model.id = null
-		this.model.room = null
+		this.model.room_id = null
 		this.model.date = null
 		this.model.time = null
 		this.model.duration = null
+		this.errors = null
 		this.edit = false
 		this.dialog = false
 	  }

@@ -219,10 +219,10 @@
 		},
 
 		editItem (booking) {
-			this.$refs.createBooking.model.room = booking.room_id
+			this.$refs.createBooking.model.room_id = booking.room_id
 			this.$refs.createBooking.model.date = booking.js_date
 			this.$refs.createBooking.model.time = booking.js_time
-			this.$refs.createBooking.model.duration = booking.duration
+			this.$refs.createBooking.model.duration = booking.duration.toString()
 			this.$refs.createBooking.model.id = booking.id
 			this.$refs.createBooking.edit = true
 			this.$refs.createBooking.dialog = true

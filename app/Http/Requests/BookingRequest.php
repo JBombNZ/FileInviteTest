@@ -35,8 +35,9 @@ class BookingRequest extends FormRequest
             
             'date' => 'required|date|after_or_equal:today',
             'duration' => Rule::in(['30', '60']),
-            'room' => 'required|exists:rooms,id',
+            'room_id' => 'required|exists:rooms,id',
             'time' => ['required', new TimeBetween('08:00', '17:00')],
+            'id' => 'nullable|sometimes|exists:bookings,id'
         ];
     }
 }

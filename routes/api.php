@@ -26,6 +26,8 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::get('bookings', [BookingController::class, 'index']);
     Route::post('bookings', [BookingController::class, 'store']);
+    Route::put('bookings', [BookingController::class, 'update']);
     Route::delete('bookings/{id}', [BookingController::class, 'destroy']);
+    
     
 });
