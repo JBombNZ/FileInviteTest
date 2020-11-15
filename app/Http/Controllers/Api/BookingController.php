@@ -7,6 +7,8 @@ use App\Http\Requests\BookingRequest;
 use App\Repositories\Interfaces\BookingRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Http\Requests\BookingGetRequest;
+use App\Http\Resources\BookingResourceCollection;
 
 class BookingController extends Controller
 {
@@ -24,9 +26,13 @@ class BookingController extends Controller
     /*
      * 
      */
-    public function index()
+    public function index(BookingGetRequest $request)
     {
+
+        $parameters = $request->all();
+        $models = $this->repository->search($parameters);        
         
+        return new BookingResourceCollection($models);
     }
     
     /*

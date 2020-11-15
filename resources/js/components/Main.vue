@@ -4,7 +4,7 @@
     <v-navigation-drawer app>
       <v-list dense>
 
-        <v-list-item link>
+        <v-list-item link @click="navigate('/home')">
           <v-list-item-action>
             <v-icon>mdi-vhs</v-icon>
           </v-list-item-action>

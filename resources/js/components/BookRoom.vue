@@ -40,7 +40,7 @@
 						<template v-slot:activator="{ on, attrs }">
 						<v-text-field
 							v-model="model.date"
-							label="Picker in menu"
+							label="Date of booking"
 							prepend-icon="mdi-calendar"
 							readonly
 							v-bind="attrs"
@@ -64,7 +64,7 @@
 						<v-btn
 							text
 							color="primary"
-							@click="$refs.menu.save(date)"
+							@click="$refs.menu.save(model.date)"
 						>
 							OK
 						</v-btn>
@@ -218,10 +218,21 @@
 			.then((response) => {
 
 				console.log(response)
+				if (response.data.success) {
+					this.$router.push({ path: '/bookings' })
+				}
+				else {
+					this.errors = response.data.message
+				}
 			
 			})
 			.catch((error) => {
-	
+
+				if (error.response.status == 422) {
+					// The information for each fields error is in here but will skip for a test
+					this.errors = error.response.data.message
+				}
+
 			});
 
 

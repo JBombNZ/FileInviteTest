@@ -67,7 +67,8 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Pacific/Auckland',
+    'timeformat' => 'g:ia j M y',
 
     /*
     |--------------------------------------------------------------------------

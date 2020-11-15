@@ -18,8 +18,8 @@ Vue.component('register', Register);
 import Home from './components/Home.vue';
 Vue.component('home', Home);
 
-import Rooms from './components/Rooms.vue';
-Vue.component('rooms', Rooms);
+import Bookings from './components/Bookings.vue';
+Vue.component('bookings', Bookings);
 
 import BookRoom from './components/BookRoom.vue';
 Vue.component('book-room', BookRoom);
@@ -32,7 +32,7 @@ const routes = [
   { path: '/home', component: Home },
 	{ path: '/login', component: Login },
   { path: '/register', component: Register },
-  { path: '/rooms', component: Rooms },
+  { path: '/bookings', component: Bookings },
 
 ]
 

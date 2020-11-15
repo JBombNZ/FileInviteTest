@@ -22,7 +22,7 @@
 
 		loadTable () {
 
-			window.axios.get('/api/rooms')
+			window.axios.get('/api/bookings')
 				.then((response) => {
 
 					

@@ -31,4 +31,17 @@ class Booking extends Model
         'updated_at',
     ];
     
+    /*
+     * 
+     */
+    public function room() {
+        return $this->belongsTo(Room::class);
+    }
+    
+    /*
+     * 
+     */
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }
