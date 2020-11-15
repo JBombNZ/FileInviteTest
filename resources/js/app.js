@@ -21,6 +21,10 @@ Vue.component('home', Home);
 import Rooms from './components/Rooms.vue';
 Vue.component('rooms', Rooms);
 
+import BookRoom from './components/BookRoom.vue';
+Vue.component('book-room', BookRoom);
+
+
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
@@ -28,7 +32,8 @@ const routes = [
   { path: '/home', component: Home },
 	{ path: '/login', component: Login },
   { path: '/register', component: Register },
-  { path: '/rooms', component: Rooms }
+  { path: '/rooms', component: Rooms },
+  { path: '/book-room', component: BookRoom },
 ]
 
 const router = new VueRouter({

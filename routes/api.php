@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\UserController;
 
@@ -28,5 +29,8 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::get('rooms', [RoomController::class, 'index']);
     Route::get('user', [UserController::class, 'index']);
+    
+    Route::get('bookings', [BookingController::class, 'index']);
+    Route::post('bookings', [BookingController::class, 'store']);
     
 });
